@@ -18,6 +18,7 @@ getMedia();
 const App = () => {
   const [localPeerName, setLocalPeerName] = useState('');
   const [remotePeerName, setRemotePeerName] = useState('');
+  console.log({ localPeerName, remotePeerName })
 
   return (
     <React.Fragment>
@@ -26,6 +27,7 @@ const App = () => {
         setLocalPeerName={setLocalPeerName}
       />
       <InputFormRemote
+        localPeerName={localPeerName}
         remotePeerName={remotePeerName}
         setRemotePeerName={setRemotePeerName}
       />
