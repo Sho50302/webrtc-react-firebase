@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import InputFormLocal from './InputFormLocal';
 import InputFormRemote from './InputFormRemote';
@@ -11,17 +11,26 @@ const getMedia = async () => {
   } catch (err) {
     console.error(err);
   }
-};
+}
 
 getMedia();
 
 const App = () => {
+  const [localPeerName, setLocalPeerName] = useState('');
+  const [remotePeerName, setRemotePeerName] = useState('');
+
   return (
     <React.Fragment>
-      <InputFormLocal />
-      <InputFormRemote />
+      <InputFormLocal
+        localPeerName={localPeerName}
+        setLocalPeerName={setLocalPeerName}
+      />
+      <InputFormRemote
+        remotePeerName={remotePeerName}
+        setRemotePeerName={setRemotePeerName}
+      />
     </React.Fragment>
-  )
-};
+  );
+}
 
 export default App;
