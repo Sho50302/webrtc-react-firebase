@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputFormRemote = () => {
+const InputFormRemote = ({ remotePeerName, setRemotePeerName }) => {
   const label = '相手の名前';
   const classes = useStyles();
 
