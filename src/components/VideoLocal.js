@@ -10,7 +10,6 @@ const VideoLocal = ({ name }) => {
     if (currentVideoRef === null) return;
     const getMedia = async () => {
       const constraints = { audio: true, video: true };
-
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
         currentVideoRef.srcObject = mediaStream;
