@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputFormRemote = ({ localPeerName, remotePeerName, setRemotePeerName }) => {
+const InputFormRemote = ({ rtcClient }) => {
   const label = '相手の名前';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
@@ -53,13 +53,16 @@ const InputFormRemote = ({ localPeerName, remotePeerName, setRemotePeerName }) =
     setDisabled(disabled);
   }, [name]);
 
-  const initializeRemotePeer = (e) => {
-    setRemotePeerName(name);
+  const initializeRemotePeer = useCallback(
+    (e) => {
+    rtcClient.remotePeerName = name;
     e.preventDefault();
-  }
+    },
+    [name, rtcClient]
+  );
 
-  if (localPeerName === '') return <></>;
-  if (remotePeerName !== '') return <></>;
+  if (rtcClient.localPeerName === '') return <></>;
+  if (rtcClient.remotePeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">

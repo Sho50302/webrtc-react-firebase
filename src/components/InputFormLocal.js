@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputFormLocal = ({ localPeerName, setLocalPeerName }) => {
+const InputFormLocal = ({ rtcClient }) => {
   const label = 'あなたの名前';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
@@ -53,12 +53,15 @@ const InputFormLocal = ({ localPeerName, setLocalPeerName }) => {
     setDisabled(disabled);
   }, [name]);
 
-  const initializeLocalPeer = (e) => {
-    setLocalPeerName(name);
+  const initializeLocalPeer = useCallback(
+    (e) => {
+    rtcClient.localPeerName = name;
     e.preventDefault();
-  }
+    },
+    [name, rtcClient]
+  );
 
-  if (localPeerName !== '') return <></>;
+  if (rtcClient.localPeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
