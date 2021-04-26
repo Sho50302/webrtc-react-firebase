@@ -110,6 +110,7 @@ export default class RtcClient {
     this.setRtcClient();
   }
 
+  // リモート側との通信を行う
   async connect(remotePeerName) {
     this.remotePeerName = remotePeerName;
     this.setOnicecandidateCallback();
@@ -118,6 +119,7 @@ export default class RtcClient {
     this.setRtcClient();
   }
 
+  // sessionDescriptionをJSON形式で取得
   get localDescription() {
     return this.rtcPeerConnection.localDescription.toJSON();
   }

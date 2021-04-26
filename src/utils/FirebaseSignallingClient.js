@@ -24,10 +24,12 @@ export default class FirebaseSignallingClient {
     this.remotePeerName = remotePeerName;
   }
 
+  // targerRefを取得
   get targetRef() {
     return this.database.ref(this.remotePeerName);
   }
 
+  // offer情報の登録
   async sendOffer(sessionDescription) {
     await this.targetRef.set({
       type: 'offer',
