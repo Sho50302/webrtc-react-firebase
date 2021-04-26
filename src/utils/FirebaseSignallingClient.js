@@ -17,4 +17,22 @@ export default class FirebaseSignallingClient {
     this.localPeerName = '';
     this.removePeerName = '';
   }
+
+  // ペア名を登録
+  setPeerNames(localPeerName, remotePeerName) {
+    this.localPeerName = localPeerName;
+    this.remotePeerName = remotePeerName;
+  }
+
+  get targetRef() {
+    return this.database.ref(this.remotePeerName);
+  }
+
+  async sendOffer(sessionDescription) {
+    await this.targetRef.set({
+      type: 'offer',
+      sender: this.localPeerName,
+      sessionDescription
+    });
+  }
 }
