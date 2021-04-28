@@ -95,7 +95,7 @@ export default class RtcClient {
       this.remotePeerName
     );
 
-    await this.FirebaseSignallingClient.sendOffer(this.localDescription);
+    await this.firebaseSignallingClient.sendOffer(this.localDescription);
   }
 
   // リモート側の映像trackの設定
