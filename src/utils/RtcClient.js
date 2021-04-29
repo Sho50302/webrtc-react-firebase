@@ -63,7 +63,7 @@ export default class RtcClient {
     return this.mediaStream.getVideoTracks()[0];
   }
 
-  // offerの設定
+  // offerの処理
   async offer() {
     const sessionDescription = await this.createOffer();
     await this.setLocalDescription(sessionDescription);
@@ -79,7 +79,7 @@ export default class RtcClient {
     }
   }
 
-  // ローカル側のofferの設定
+  // localDescriptionの設定
   async setLocalDescription(sessionDescription) {
     try {
       await this.rtcPeerConnection.setLocalDescription(sessionDescription);
@@ -110,6 +110,21 @@ export default class RtcClient {
     this.setRtcClient();
   }
 
+  // answerの処理
+  async answer(sender, sessionDescription) {
+    try {
+      this.remotePeerName = sender;
+      this.setOnicecandidateCallback();
+      this.setOntrack();
+      await this.setRemoteDescription(sessionDescription);
+      const answer = await this.rtcPeerConnection.createAnswer();
+      this.rtcPeerConnection.setLocalDescription(answer);
+      await this.sendAnswer();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   // リモート側との通信を行う
   async connect(remotePeerName) {
     this.remotePeerName = remotePeerName;
@@ -117,6 +132,20 @@ export default class RtcClient {
     this.setOntrack();
     await this.offer();
     this.setRtcClient();
+  }
+
+  // remoteDescriptionの設定
+  async setRemoteDescription(sessionDescription) {
+    await this.rtcPeerConnection.setRemoteDescription(sessionDescription);
+  }
+
+  // firebaseにanswerの送信
+  async sendAnswer() {
+    this.firebaseSignallingClient.setPeerNames(
+      this.localPeerName,
+      this.remotePeerName
+    );
+    await this.firebaseSignallingClient.sendAnswer(this.localDescription);
   }
 
   // sessionDescriptionをJSON形式で取得
@@ -137,8 +166,18 @@ export default class RtcClient {
     this.setRtcClient();
     this.firebaseSignallingClient.database
     .ref(localPeerName)
-    .on('value', (snapshot) => {
+    .on('value', async (snapshot) => {
       const data = snapshot.val();
+      if (data === null) return;
+
+      const { sender, sessionDescription, type } = data;
+      switch (type) {
+        case 'offer':
+          await this.answer(sender, sessionDescription);
+          break;
+        default:
+          break;
+      }
     });
   }
 }
