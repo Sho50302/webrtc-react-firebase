@@ -148,6 +148,15 @@ export default class RtcClient {
     await this.firebaseSignallingClient.sendAnswer(this.localDescription);
   }
 
+  // 受信したsessionDescriptionを保存
+  async saveReceivedSessionDescription(sessionDescription) {
+    try {
+      await this.setRemoteDescription(sessionDescription);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   // sessionDescriptionをJSON形式で取得
   get localDescription() {
     return this.rtcPeerConnection.localDescription.toJSON();
@@ -161,9 +170,10 @@ export default class RtcClient {
     }
   }
 
-  startListning(localPeerName) {
+  async startListning(localPeerName) {
     this.localPeerName = localPeerName;
     this.setRtcClient();
+    await this.firebaseSignallingClient.remove(localPeerName);
     this.firebaseSignallingClient.database
     .ref(localPeerName)
     .on('value', async (snapshot) => {
@@ -174,6 +184,9 @@ export default class RtcClient {
       switch (type) {
         case 'offer':
           await this.answer(sender, sessionDescription);
+          break;
+        case 'answer':
+          await this.saveReceivedSessionDescription(sessionDescription);
           break;
         default:
           break;

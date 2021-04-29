@@ -54,8 +54,8 @@ const InputFormLocal = ({ rtcClient }) => {
   }, [name]);
 
   const initializeLocalPeer = useCallback(
-    (e) => {
-      rtcClient.startListning(name);
+    async (e) => {
+      await rtcClient.startListning(name);
       e.preventDefault();
     },
     [name, rtcClient]
@@ -80,10 +80,10 @@ const InputFormLocal = ({ rtcClient }) => {
             onChange={(e) => {setName(e.target.value)}}
             onCompositionEnd={() => {setIsComposed(false)}}
             onCompositionStart={() => {setIsComposed(true)}}
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               if (isComposed) return;
               if (e.target.value === '') return;
-              if (e.key === 'Enter') initializeLocalPeer(e);
+              if (e.key === 'Enter') await initializeLocalPeer(e);
             }}
             required
             value={name}
@@ -94,7 +94,7 @@ const InputFormLocal = ({ rtcClient }) => {
             color="primary"
             disabled={disabled}
             fullWidth
-            onClick={(e) => {initializeLocalPeer(e)}}
+            onClick={async (e) => { await initializeLocalPeer(e)}}
             type="submit"
             variant="contained"
           >
