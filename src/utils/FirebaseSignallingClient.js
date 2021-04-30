@@ -34,7 +34,7 @@ export default class FirebaseSignallingClient {
     await this.targetRef.set({
       type: 'offer',
       sender: this.localPeerName,
-      sessionDescription
+      sessionDescription,
     });
   }
 
@@ -43,8 +43,16 @@ export default class FirebaseSignallingClient {
     await this.targetRef.set({
       type: 'answer',
       sender: this.localPeerName,
-      sessionDescription
+      sessionDescription,
     });
+  }
+
+  async sendCandidate(candidate) {
+    await this.targetRef.set({
+      type: 'candidate',
+      sender: this.localPeerName,
+      candidate,
+    })
   }
 
   async remove(path) {
