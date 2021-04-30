@@ -162,6 +162,7 @@ export default class RtcClient {
     return this.rtcPeerConnection.localDescription.toJSON();
   }
 
+  // candidateを追加する
   async addIceCandidate(candidate) {
     try {
       const iceCandidate = new RTCIceCandidate(candidate);
@@ -171,6 +172,7 @@ export default class RtcClient {
     }
   }
 
+  // 通信経路情報をfirebase側に送信する
   setOnicecandidateCallback() {
     this.rtcPeerConnection.onicecandidate = async ({ candidate }) => {
       if (candidate) {
@@ -180,6 +182,7 @@ export default class RtcClient {
     }
   }
 
+  // 通信開始
   async startListning(localPeerName) {
     this.localPeerName = localPeerName;
     this.setRtcClient();

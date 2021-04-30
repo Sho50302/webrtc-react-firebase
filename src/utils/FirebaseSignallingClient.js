@@ -47,6 +47,7 @@ export default class FirebaseSignallingClient {
     });
   }
 
+  // candidate情報の登録
   async sendCandidate(candidate) {
     await this.targetRef.set({
       type: 'candidate',
@@ -55,6 +56,7 @@ export default class FirebaseSignallingClient {
     })
   }
 
+  // アプリが起動する度にDBの中身を初期化
   async remove(path) {
     await this.database.ref(path).remove();
   }
