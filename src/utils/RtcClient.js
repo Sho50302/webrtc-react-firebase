@@ -17,6 +17,7 @@ export default class RtcClient {
     this.mediaStream = null;
   }
 
+  // audioの初期状態
   get initialAudioMuted() {
     return !INITIAL_AUDIO_ENABLED;
   }
@@ -70,6 +71,7 @@ export default class RtcClient {
     return this.mediaStream.getVideoTracks()[0];
   }
 
+  // 音声の切り替え
   toggleAudio() {
     this.audioTrack.enabled = !this.audioTrack.enabled;
     this.setRtcClient();
