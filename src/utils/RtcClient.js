@@ -1,5 +1,7 @@
 import FirebaseSignallingClient from './FirebaseSignallingClient';
 
+const INITIAL_AUDIO_ENABLED = false;
+
 // RtcClientクラス
 export default class RtcClient {
   constructor(remoteVideoRef, setRtcClient) {
@@ -13,6 +15,10 @@ export default class RtcClient {
     this.remoteVideoRef = remoteVideoRef;
     this._setRtcClient = setRtcClient;
     this.mediaStream = null;
+  }
+
+  get initialAudioMuted() {
+    return !INITIAL_AUDIO_ENABLED;
   }
 
   // RtcClientの値を更新
@@ -45,6 +51,7 @@ export default class RtcClient {
 
   // mediaStreamに音声Trackの追加
   addAudioTrack() {
+    this.audioTrack.enabled = INITIAL_AUDIO_ENABLED;
     this.rtcPeerConnection.addTrack(this.audioTrack, this.mediaStream);
   }
 
@@ -61,6 +68,11 @@ export default class RtcClient {
   // 映像の取得
   get videoTrack() {
     return this.mediaStream.getVideoTracks()[0];
+  }
+
+  toggleAudio() {
+    this.audioTrack.enabled = !this.audioTrack.enabled;
+    this.setRtcClient();
   }
 
   // offerの処理
@@ -192,7 +204,6 @@ export default class RtcClient {
     .on('value', async (snapshot) => {
       const data = snapshot.val();
       if (data === null) return;
-      console.log({ data });
 
       const { candidate, sender, sessionDescription, type } = data;
       switch (type) {
