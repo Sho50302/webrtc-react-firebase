@@ -5,7 +5,6 @@ const defaultDimensions = { width: 0, height: 0 }
 const useDimensions = (targetRef) => {
   let [dimensions, setDimensions] = useState(defaultDimensions);
   const node = targetRef.current;
-  console.log({ node })
   const updateDimensions = (node) => {
     return node === null
       ? defaultDimensions
